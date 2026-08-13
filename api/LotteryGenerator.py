@@ -4,7 +4,8 @@ from flask_restful import Resource
 try:
     from .main_functions import download_lotto_csv, get_probabilities, generate_lottery_numbers
 except ImportError:
-    from server.main_functions import download_lotto_csv, get_probabilities, generate_lottery_numbers
+    from api.main_functions import download_lotto_csv, get_probabilities, generate_lottery_numbers
+
 
 class LotteryGenerator(Resource):
     def get(self, lotto_type):
