@@ -91,9 +91,10 @@ Connect the GitHub repo. Root `vercel.json` already sets:
 - Install: `uv pip install -r requirements.txt && cd client && npm ci`
 - Build: `cd client && npm run build`
 - Output: `client/dist`
-- Rewrites: `/api` and `/api/*` → `api/index.py`
 
 Python version is pinned to **3.12** via `.python-version`. After a deploy, `/` should serve the app and `/api` should return `{"message":"200, OK"}`.
+
+Do not add `/api` → `/api/index.py` rewrites. Vercel’s Flask preset already handles `/api/*` after static files, and those rewrites now change the path Flask sees (which triggers the internal-rewrite build warning).
 
 ## License
 
