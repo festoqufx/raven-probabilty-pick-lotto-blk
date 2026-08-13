@@ -37,8 +37,27 @@ app = Flask(__name__)
 CORS(app)
 
 
+class VercelPathFixMiddleware:
+
+    def __init__(self, wsgi_app):
+        self.wsgi_app = wsgi_app
+
+    def __call__(self, environ, start_response):
+        path = environ.get('PATH_INFO', '')
+        if path.startswith('/api/index.py'):
+            environ['PATH_INFO'] = path[13:] or '/'
+        elif path.startswith('/api/index'):
+            environ['PATH_INFO'] = path[10:] or '/'
+        return self.wsgi_app(environ, start_response)
+
+
+app.wsgi_app = VercelPathFixMiddleware(app.wsgi_app)
+
+
 @app.route('/')
 @app.route('/api')
+@app.route('/api/index')
+@app.route('/api/index.py')
 def index():
     return jsonify({'message': '200, OK'})
 
@@ -51,3 +70,4 @@ def generate(lotto_type):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)
+

@@ -1,6 +1,7 @@
 .venv
-__pycache__D:\COPILOT\github backup\00 - sample project\raven-probabilty-pick-lotto-blk
+__pycache__
 *.pyc
 .git
 .vscode
 client/node_modules
+
