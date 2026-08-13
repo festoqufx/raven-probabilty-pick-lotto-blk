@@ -1,5 +1,20 @@
 {
-    "installCommand": "cd client && npm ci",
+    "installCommand": "uv pip install -r requirements.txt && cd client && npm ci",
     "buildCommand": "cd client && npm run build",
-    "outputDirectory": "client/dist"
+    "outputDirectory": "client/dist",
+    "functions": {
+        "api/index.py": {
+            "includeFiles": "api/fallback_data/**"
+        }
+    },
+    "rewrites": [
+        {
+            "source": "/api",
+            "destination": "/api/index.py"
+        },
+        {
+            "source": "/api/:path*",
+            "destination": "/api/index.py/:path*"
+        }
+    ]
 }

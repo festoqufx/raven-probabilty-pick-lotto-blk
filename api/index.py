@@ -44,15 +44,16 @@ class VercelPathFixMiddleware:
         self.wsgi_app = wsgi_app
 
     def __call__(self, environ, start_response):
-        path = environ.get('PATH_INFO', '') or ''
+        path = environ.get('PATH_INFO', '') or '/'
         original = self._original_path(environ)
 
         if self._is_entrypoint(path):
             if original.startswith('/api') and not self._is_entrypoint(original):
-                environ['PATH_INFO'] = original
+                path = original
             else:
-                environ['PATH_INFO'] = self._strip_entrypoint(path)
+                path = self._strip_entrypoint(path)
 
+        environ['PATH_INFO'] = path if path.startswith('/') else f'/{path}'
         return self.wsgi_app(environ, start_response)
 
     @staticmethod
