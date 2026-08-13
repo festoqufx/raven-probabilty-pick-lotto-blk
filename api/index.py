@@ -38,17 +38,52 @@ CORS(app)
 
 
 class VercelPathFixMiddleware:
+    """Keep Flask routes aligned with the public URL after Vercel rewrites."""
 
     def __init__(self, wsgi_app):
         self.wsgi_app = wsgi_app
 
     def __call__(self, environ, start_response):
-        path = environ.get('PATH_INFO', '')
-        if path.startswith('/api/index.py'):
-            environ['PATH_INFO'] = path[13:] or '/'
-        elif path.startswith('/api/index'):
-            environ['PATH_INFO'] = path[10:] or '/'
+        path = environ.get('PATH_INFO', '') or ''
+        original = self._original_path(environ)
+
+        if self._is_entrypoint(path):
+            if original.startswith('/api') and not self._is_entrypoint(original):
+                environ['PATH_INFO'] = original
+            else:
+                environ['PATH_INFO'] = self._strip_entrypoint(path)
+
         return self.wsgi_app(environ, start_response)
+
+    @staticmethod
+    def _is_entrypoint(path):
+        return (
+            path == '/api/index.py'
+            or path == '/api/index'
+            or path.startswith('/api/index.py/')
+            or path.startswith('/api/index/')
+        )
+
+    @staticmethod
+    def _strip_entrypoint(path):
+        if path.startswith('/api/index.py'):
+            return path[13:] or '/'
+        if path.startswith('/api/index'):
+            return path[10:] or '/'
+        return path or '/'
+
+    @staticmethod
+    def _original_path(environ):
+        for key in (
+            'HTTP_X_FORWARDED_URI',
+            'HTTP_X_INVOKE_PATH',
+            'HTTP_X_VERCEL_ORIGINAL_PATH',
+            'REQUEST_URI',
+        ):
+            value = environ.get(key) or ''
+            if value:
+                return value.split('?', 1)[0]
+        return ''
 
 
 app.wsgi_app = VercelPathFixMiddleware(app.wsgi_app)

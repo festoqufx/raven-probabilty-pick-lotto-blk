@@ -5,3 +5,26 @@ npm notice run vite
 Browserslist: caniuse-lite is outdated. Please run:
   npx update-browserslist-db@latest
   Why you should do it regularly: https://github.com/browserslist/update-db#readme
+node:internal/fs/watchers:323
+    const error = new UVException({
+                  ^
+
+Error: EBUSY: resource busy or locked, watch 'D:\COPILOT\github backup\00 - sample project\raven-probabilty-pick-lotto-blk\client\dist\icon.png'
+    at FSWatcher.<computed> (node:internal/fs/watchers:323:19)
+    at Object.watch (node:fs:2609:36)
+    at createFsWatchInstance (file:///D:/COPILOT/github%20backup/00%20-%20sample%20project/raven-probabilty-pick-lotto-blk/client/node_modules/vite/dist/node/chunks/dep-3b8eb186.js:51974:17)
+    at setFsWatchListener (file:///D:/COPILOT/github%20backup/00%20-%20sample%20project/raven-probabilty-pick-lotto-blk/client/node_modules/vite/dist/node/chunks/dep-3b8eb186.js:52021:15)
+    at NodeFsHandler._watchWithNodeFs (file:///D:/COPILOT/github%20backup/00%20-%20sample%20project/raven-probabilty-pick-lotto-blk/client/node_modules/vite/dist/node/chunks/dep-3b8eb186.js:52176:14)
+    at NodeFsHandler._handleFile (file:///D:/COPILOT/github%20backup/00%20-%20sample%20project/raven-probabilty-pick-lotto-blk/client/node_modules/vite/dist/node/chunks/dep-3b8eb186.js:52240:23)
+    at NodeFsHandler._addToNodeFs (file:///D:/COPILOT/github%20backup/00%20-%20sample%20project/raven-probabilty-pick-lotto-blk/client/node_modules/vite/dist/node/chunks/dep-3b8eb186.js:52482:21)
+Emitted 'error' event on FSWatcher instance at:
+    at FSWatcher._handleError (file:///D:/COPILOT/github%20backup/00%20-%20sample%20project/raven-probabilty-pick-lotto-blk/client/node_modules/vite/dist/node/chunks/dep-3b8eb186.js:53673:10)
+    at NodeFsHandler._addToNodeFs (file:///D:/COPILOT/github%20backup/00%20-%20sample%20project/raven-probabilty-pick-lotto-blk/client/node_modules/vite/dist/node/chunks/dep-3b8eb186.js:52490:18) {
+  errno: -4082,
+  syscall: 'watch',
+  code: 'EBUSY',
+  path: 'D:\\COPILOT\\github backup\\00 - sample project\\raven-probabilty-pick-lotto-blk\\client\\dist\\icon.png',
+  filename: 'D:\\COPILOT\\github backup\\00 - sample project\\raven-probabilty-pick-lotto-blk\\client\\dist\\icon.png'
+}
+
+Node.js v24.19.0
