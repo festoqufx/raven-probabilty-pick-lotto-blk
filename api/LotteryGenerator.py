@@ -1,10 +1,23 @@
+import os
+import sys
+
+_API_DIR = os.path.dirname(os.path.abspath(__file__))
+_ROOT_DIR = os.path.dirname(_API_DIR)
+if _API_DIR not in sys.path:
+    sys.path.insert(0, _API_DIR)
+if _ROOT_DIR not in sys.path:
+    sys.path.insert(0, _ROOT_DIR)
+
 from flask import jsonify, request
 from flask_restful import Resource
 
 try:
-    from .main_functions import download_lotto_csv, get_probabilities, generate_lottery_numbers
+    from main_functions import download_lotto_csv, get_probabilities, generate_lottery_numbers
 except ImportError:
-    from api.main_functions import download_lotto_csv, get_probabilities, generate_lottery_numbers
+    try:
+        from .main_functions import download_lotto_csv, get_probabilities, generate_lottery_numbers
+    except ImportError:
+        from api.main_functions import download_lotto_csv, get_probabilities, generate_lottery_numbers
 
 
 class LotteryGenerator(Resource):

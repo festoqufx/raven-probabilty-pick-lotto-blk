@@ -16,14 +16,24 @@ if not hasattr(pkgutil, 'get_loader'):
 
     pkgutil.get_loader = _compat_get_loader
 
+_API_DIR = os.path.dirname(os.path.abspath(__file__))
+_ROOT_DIR = os.path.dirname(_API_DIR)
+if _API_DIR not in sys.path:
+    sys.path.insert(0, _API_DIR)
+if _ROOT_DIR not in sys.path:
+    sys.path.insert(0, _ROOT_DIR)
+
 from flask import Flask
 from flask_restful import Api, Resource
 from flask_cors import CORS
 
 try:
-    from .LotteryGenerator import LotteryGenerator
+    from LotteryGenerator import LotteryGenerator
 except ImportError:
-    from api.LotteryGenerator import LotteryGenerator
+    try:
+        from .LotteryGenerator import LotteryGenerator
+    except ImportError:
+        from api.LotteryGenerator import LotteryGenerator
 
 app = Flask(__name__)
 CORS(app)
