@@ -1,9 +1,8 @@
 import os
-import pkgutil
 import sys
+import pkgutil
 
-# Python 3.14 removed pkgutil.get_loader, which Flask relies on when resolving
-# a package's root path. Restore it so the app still boots on Python 3.14.
+# Python 3.14 removed pkgutil.get_loader, which older Flask relies on.
 if not hasattr(pkgutil, 'get_loader'):
     import importlib
 
@@ -23,32 +22,32 @@ if _API_DIR not in sys.path:
 if _ROOT_DIR not in sys.path:
     sys.path.insert(0, _ROOT_DIR)
 
-from flask import Flask
-from flask_restful import Api, Resource
+from flask import Flask, jsonify
 from flask_cors import CORS
 
 try:
-    from LotteryGenerator import LotteryGenerator
+    from LotteryGenerator import handle_lottery_generator
 except ImportError:
     try:
-        from .LotteryGenerator import LotteryGenerator
+        from .LotteryGenerator import handle_lottery_generator
     except ImportError:
-        from api.LotteryGenerator import LotteryGenerator
+        from api.LotteryGenerator import handle_lottery_generator
 
 app = Flask(__name__)
 CORS(app)
-api = Api(app)
 
 
-class App(Resource):
-    def get(self):
-        return {'message': '200, OK'}
+@app.route('/')
+@app.route('/api')
+def index():
+    return jsonify({'message': '200, OK'})
 
 
-api.add_resource(App, '/', '/api')
-api.add_resource(LotteryGenerator, '/generate/<int:lotto_type>', '/api/generate/<int:lotto_type>')
+@app.route('/generate/<int:lotto_type>')
+@app.route('/api/generate/<int:lotto_type>')
+def generate(lotto_type):
+    return handle_lottery_generator(lotto_type)
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)
-
